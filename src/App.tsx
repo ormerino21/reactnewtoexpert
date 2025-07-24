@@ -1,24 +1,43 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import { Button } from './components'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [name, setName] = useState("Jhon")
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  const countMore = () => {
-    setCount((count) => count + 1)
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch("https://pokeapi.co/api/v2/pokemon/?limit=20")
+      if (!response.ok) {
+        throw new Error("Error: Something went wrong")
+      }
+
+      const jsonData = await response.json()
+      setData(jsonData)
+    } catch (error) {
+      setError(error as string)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const changeName = () => {
-    setName("Jhon Doe")
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return <div>Loading....</div>
+  }
+
+  if (error) {
+    return <div>Something went wrong: {error}</div>
   }
 
   return (
     <>
-      <Button label={`Count is: ${count}`} parentMethod={countMore}/>
-      {name}
-      <Button label={`Change Name`} parentMethod={changeName}/>
+      <div>{JSON.stringify(data)}</div>
     </>
   )
 }
