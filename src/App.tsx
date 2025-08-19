@@ -1,12 +1,22 @@
 import './App.css'
-import { CustomForm } from './components'
+import { Button, ColorRed, CustomForm } from './components'
+import { GlobalProvider } from './context/global.provider'
 
 function App() {
 
+  const clickedOnMe = () => {
+    alert("Clicked on me!!")
+  }
+
+  const sayHello = () => {
+    alert("Helo!!")
+  }
+
   return (
-    <>
-      <CustomForm></CustomForm>
-    </>
+    <GlobalProvider>
+      <ColorRed><Button parentMethod={sayHello}>My red button</Button></ColorRed>
+      <Button parentMethod={clickedOnMe}>My normal button</Button>
+    </GlobalProvider>
   )
 }
 
